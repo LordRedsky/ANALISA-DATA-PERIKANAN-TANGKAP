@@ -26,6 +26,16 @@ def clean_val(val):
         return int(val)
     return val
 
+def clean_val_str(val):
+    """Clean value and force it to string, preserving full numeric IDs (e.g. No. KTP, No. KUSUKA)."""
+    if pd.isnull(val):
+        return ""
+    s = str(val).strip()
+    # Remove trailing .0 if the string came from a float representation
+    if s.endswith('.0'):
+        s = s[:-2]
+    return s
+
 def clean_text(text):
     """Normalize text by trimming spaces."""
     if not isinstance(text, str):
@@ -90,7 +100,7 @@ def process_fisheries_data(input_file_path, template_file_path, output_file_path
     and writes it to the output file using the layout of the template file.
     """
     # Load input data
-    df = pd.read_excel(input_file_path, sheet_name=0)
+    df = pd.read_excel(input_file_path, sheet_name=0, dtype={'No. KTP': str, 'No. KUSUKA': str})
     
     # Filter out completely empty rows (where NAMA NELAYAN is null)
     df = df[df['NAMA NELAYAN'].notnull()]
@@ -109,8 +119,8 @@ def process_fisheries_data(input_file_path, template_file_path, output_file_path
         record['NAMA PETUGAS '] = clean_val(row.get('Tuliskan Nama Lengkap Anda'))
         record['KECAMATAN'] = clean_val(row.get('KECAMATAN'))
         record['NAMA NELAYAN'] = clean_val(row.get('NAMA NELAYAN'))
-        record['No. KTP'] = clean_val(row.get('No. KTP'))
-        record['No. KUSUKA'] = clean_val(row.get('No. KUSUKA'))
+        record['No. KTP'] = clean_val_str(row.get('No. KTP'))
+        record['No. KUSUKA'] = clean_val_str(row.get('No. KUSUKA'))
         record['No. HANDPHONE'] = clean_val(row.get('No. HANDPHONE'))
         record['JENIS USAHA'] = clean_val(row.get('JENIS USAHA'))
         record['KEAHLIAN NELAYAN'] = clean_val(row.get('KEAHLIAN NELAYAN'))
