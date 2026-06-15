@@ -100,7 +100,7 @@ def process_fisheries_data(input_file_path, template_file_path, output_file_path
     and writes it to the output file using the layout of the template file.
     """
     # Load input data
-    df = pd.read_excel(input_file_path, sheet_name=0, dtype={'No. KTP': str, 'No. KUSUKA': str})
+    df = pd.read_excel(input_file_path, sheet_name=0, dtype={'No. KTP': str, 'No. KUSUKA': str, 'No. HANDPHONE': str})
     
     # Filter out completely empty rows (where NAMA NELAYAN is null)
     df = df[df['NAMA NELAYAN'].notnull()]
@@ -121,7 +121,7 @@ def process_fisheries_data(input_file_path, template_file_path, output_file_path
         record['NAMA NELAYAN'] = clean_val(row.get('NAMA NELAYAN'))
         record['No. KTP'] = clean_val_str(row.get('No. KTP'))
         record['No. KUSUKA'] = clean_val_str(row.get('No. KUSUKA'))
-        record['No. HANDPHONE'] = clean_val(row.get('No. HANDPHONE'))
+        record['No. HANDPHONE'] = clean_val_str(row.get('No. HANDPHONE'))
         record['JENIS USAHA'] = clean_val(row.get('JENIS USAHA'))
         record['KEAHLIAN NELAYAN'] = clean_val(row.get('KEAHLIAN NELAYAN'))
         record['SURAT IZIN BERUSAHA'] = clean_val(row.get('SURAT IZIN BERUSAHA'))
